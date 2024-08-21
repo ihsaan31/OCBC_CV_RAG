@@ -23,7 +23,7 @@ PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
-index_name = "ocbc-hr-gpt"  # change if desired
+index_name = "ocbc-cv-gpt"  # change if desired
 index = pc.Index(index_name)
 
 llm = AzureChatOpenAI(
@@ -62,3 +62,8 @@ rag_chain = (
 def caller(message):
     response = rag_chain.invoke(message)
     return response
+
+
+
+
+

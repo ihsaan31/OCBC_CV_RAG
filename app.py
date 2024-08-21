@@ -20,28 +20,60 @@ if "messages" not in st.session_state:
 if "current_response" not in st.session_state:
     st.session_state.current_response = ""
 
+# Initialize a state variable for file upload
+if "file_uploaded" not in st.session_state:
+    st.session_state.file_uploaded = False
+
 # We loop through each message in the session state and render it as
 # a chat message.
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Add an input for PDF file upload
-uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
-
-if uploaded_file is not None:
+pdf_text = []
+# Only show the file uploader and link input if no file has been uploaded
+if not st.session_state.file_uploaded:
+    uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+    # link_input = st.text_input("Enter a link here")
+    
+    if uploaded_file is not None:
     # Process the PDF file
-    pdf_reader = PyPDF2.PdfReader(uploaded_file)
-    pdf_text = ""
-    for page in pdf_reader.pages:
-        pdf_text += page.extract_text()
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+        pdf_text = ""
+        for page in pdf_reader.pages:
+            pdf_text += page.extract_text() 
+        
+        st.session_state.messages.append(
+        {"role": "user", "content": pdf_text}
+    )
 
-    # Optionally, you can display the extracted text
-    st.write("Extracted text from the PDF:")
-    st.text(pdf_text)
+    # Add our input to the chat window
+        with st.chat_message("user"):
+            st.markdown(pdf_text)
 
-    # You could then pass the extracted text to the LLM or handle it as needed
+        with st.spinner("Thinking ..."):
+            response = caller(pdf_text)
+        # Add the response to the session state
+        st.session_state.messages.append(
+            {"role": "assistant", "content": response}
+        )
 
+        # Add the response to the chat window
+        with st.chat_message("assistant"):
+            st.markdown(response)
+
+        # Optionally, you can display the extracted textssd
+        st.write("Extracted text from the PDF:")
+        st.text(pdf_text)
+        print(pdf_text)
+
+
+        # Set the file_uploaded state to True
+        st.session_state.file_uploaded = True
+        st.rerun()  # This will rerun the app and hide the uploader
+
+else:
+    st.success("File uploaded successfully!")
 # We take questions/instructions from the chat input to pass to the LLM
 if user_prompt := st.chat_input("Your message here", key="user_input"):
 
