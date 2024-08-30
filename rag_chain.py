@@ -10,7 +10,7 @@ import os
 from pinecone import Pinecone, ServerlessSpec
 from langchain_pinecone import PineconeVectorStore
 from uuid import uuid4
-from templates.prompt import QA_PROMPT
+from templates.prompt import QA_PROMPT, CV_sumerrizer, contextualize_q_system_prompt
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -43,24 +43,36 @@ embedding_llm = AzureOpenAIEmbeddings(
         )
 
 vector_store = PineconeVectorStore(index=index, embedding=embedding_llm)
-retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={'k': 6})
+retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={'k': 10})
 
 prompt = PromptTemplate.from_template(QA_PROMPT)
 
 
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
 
 
-rag_chain = (
-    {"context": retriever, "question": RunnablePassthrough()}
-    | prompt
+cv_summarizer_prompt = PromptTemplate.from_template(CV_sumerrizer)
+cv_summarizer_chain = (
+    {"question": RunnablePassthrough()}
+    | cv_summarizer_prompt
+    | llm
+    | StrOutputParser()
+)
+
+# QA chain
+qa_prompt = PromptTemplate.from_template(QA_PROMPT)
+
+# Merged chain
+merged_rag_chain = (
+    {"question": RunnablePassthrough(), "context": RunnablePassthrough(), "chat_history": RunnablePassthrough()}
+    | cv_summarizer_chain
+    | (lambda x: {"context": retriever.invoke(x), "question": x, "chat_history": x})
+    | qa_prompt
     | llm
     | StrOutputParser()
 )
 
 def caller(message):
-    response = rag_chain.invoke(message)
+    response = merged_rag_chain.invoke(message)
     return response
 
 
