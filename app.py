@@ -14,7 +14,7 @@ st.set_page_config(page_title="Chat Application", layout="wide")
 # Initialize chat history in session state
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "How may I help you today?"}
+        {"role": "assistant", "content": "Welcome to OCBC's Job Recommender Chatbot! Simply drop your CV below, and we'll instantly analyze it to see if you're a perfect fit for any of our current job openings. Let us help you take the next step in your career with OCBC!"}
     ]
 
 if "current_response" not in st.session_state:
