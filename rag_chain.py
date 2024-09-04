@@ -12,6 +12,7 @@ from langchain_pinecone import PineconeVectorStore
 from uuid import uuid4
 from templates.prompt import QA_PROMPT, CV_sumerrizer, QUESTION_PROMPT
 from dotenv import load_dotenv
+from operator import itemgetter
 load_dotenv()
 
 
@@ -52,7 +53,8 @@ prompt = PromptTemplate.from_template(QA_PROMPT)
 
 cv_summarizer_prompt = PromptTemplate.from_template(CV_sumerrizer)
 cv_summarizer_chain = (
-    {"cv": RunnablePassthrough()}
+    RunnablePassthrough() | 
+    {"cv": itemgetter("cv")}
     | cv_summarizer_prompt
     | llm
     | StrOutputParser()
@@ -73,10 +75,12 @@ merged_rag_chain = (
 
 question_prompt = PromptTemplate.from_template(QUESTION_PROMPT)
 question_chain = (
-    RunnablePassthrough().assign(
-        user_question=lambda x: x["user_question"],
-        retriever_docs=lambda x: retriever.invoke(x["user_question"])
-    )
+    {"cv": RunnablePassthrough(),
+     "user_question": itemgetter("user_question"),
+     "retriever_docs": itemgetter("user_question") | retriever} 
+    | RunnablePassthrough()
+    | {"summary": cv_summarizer_chain, "user_question": itemgetter("user_question"), "retriever_docs": itemgetter("retriever_docs")}
+    | RunnablePassthrough()
     | question_prompt
     | llm
     | StrOutputParser()
@@ -86,8 +90,8 @@ def caller_cv(message):
     response = merged_rag_chain.invoke({"cv": message})
     return response
 
-def caller_question(message):
-    response = question_chain.invoke({"user_question": message})
+def caller_question(cv, message):
+    response = question_chain.invoke({"cv": cv, "user_question": message})
     return response
 
 

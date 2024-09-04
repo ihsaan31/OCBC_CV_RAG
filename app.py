@@ -87,7 +87,7 @@ if user_prompt := st.chat_input("Your message here", key="user_input"):
         st.markdown(user_prompt)
 
     with st.spinner("Thinking ..."):
-        response = caller_question(user_prompt)
+        response = caller_question(pdf_text, user_prompt)
     # Add the response to the session state
     st.session_state.messages.append(
         {"role": "assistant", "content": response}
