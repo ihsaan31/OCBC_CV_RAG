@@ -10,7 +10,7 @@ import os
 from pinecone import Pinecone, ServerlessSpec
 from langchain_pinecone import PineconeVectorStore
 from uuid import uuid4
-from templates.prompt import QA_PROMPT, CV_sumerrizer, contextualize_q_system_prompt, QUESTION_PROMPT
+from templates.prompt import QA_PROMPT, CV_sumerrizer, QUESTION_PROMPT
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -43,7 +43,7 @@ embedding_llm = AzureOpenAIEmbeddings(
         )
 
 vector_store = PineconeVectorStore(index=index, embedding=embedding_llm)
-retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={'k': 10})
+retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={'k': 6})
 
 prompt = PromptTemplate.from_template(QA_PROMPT)
 
@@ -52,7 +52,7 @@ prompt = PromptTemplate.from_template(QA_PROMPT)
 
 cv_summarizer_prompt = PromptTemplate.from_template(CV_sumerrizer)
 cv_summarizer_chain = (
-    {"question": RunnablePassthrough()}
+    {"cv": RunnablePassthrough()}
     | cv_summarizer_prompt
     | llm
     | StrOutputParser()
