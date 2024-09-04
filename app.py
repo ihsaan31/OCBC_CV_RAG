@@ -3,7 +3,7 @@ import time
 import random
 import string
 import PyPDF2
-from rag_chain import caller
+from rag_chain import caller_cv, caller_question
 
 # sess_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 sess_id = "W56PNA34XM"
