@@ -87,7 +87,7 @@ def caller_cv(message):
     return response
 
 def caller_question(message):
-    response = question_chain.invoke(message)
+    response = question_chain.invoke({"user_question": message})
     return response
 
 
