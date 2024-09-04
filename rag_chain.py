@@ -10,7 +10,7 @@ import os
 from pinecone import Pinecone, ServerlessSpec
 from langchain_pinecone import PineconeVectorStore
 from uuid import uuid4
-from templates.prompt import QA_PROMPT, CV_sumerrizer, contextualize_q_system_prompt
+from templates.prompt import QA_PROMPT, CV_sumerrizer, contextualize_q_system_prompt, QUESTION_PROMPT
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -63,19 +63,32 @@ qa_prompt = PromptTemplate.from_template(QA_PROMPT)
 
 # Merged chain
 merged_rag_chain = (
-    {"question": RunnablePassthrough(), "context": RunnablePassthrough(), "chat_history": RunnablePassthrough()}
+    {"cv": RunnablePassthrough(), "job_listing": RunnablePassthrough()}
     | cv_summarizer_chain
-    | (lambda x: {"context": retriever.invoke(x), "question": x, "chat_history": x})
+    | (lambda x: {"job_listing": retriever.invoke(x), "cv": x}) #bikin job listing summarizer
     | qa_prompt
     | llm
     | StrOutputParser()
 )
 
-def caller(message):
+question_prompt = PromptTemplate.from_template(QUESTION_PROMPT)
+question_chain = (
+    RunnablePassthrough().assign(
+        user_question=lambda x: x["user_question"],
+        retriever_docs=lambda x: retriever.invoke(x["user_question"])
+    )
+    | question_prompt
+    | llm
+    | StrOutputParser()
+)
+
+def caller_cv(message):
     response = merged_rag_chain.invoke(message)
     return response
 
-
+def caller_question(message):
+    response = question_chain.invoke(message)
+    return response
 
 
 

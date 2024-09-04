@@ -52,7 +52,7 @@ if not st.session_state.file_uploaded:
             st.markdown(pdf_text)
 
         with st.spinner("Thinking ..."):
-            response = caller(pdf_text)
+            response = caller_cv(pdf_text)
         # Add the response to the session state
         st.session_state.messages.append(
             {"role": "assistant", "content": response}
@@ -87,7 +87,7 @@ if user_prompt := st.chat_input("Your message here", key="user_input"):
         st.markdown(user_prompt)
 
     with st.spinner("Thinking ..."):
-        response = caller(user_prompt)
+        response = caller_question(user_prompt)
     # Add the response to the session state
     st.session_state.messages.append(
         {"role": "assistant", "content": response}

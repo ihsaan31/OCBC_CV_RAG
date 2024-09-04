@@ -1,36 +1,32 @@
 CV_sumerrizer = """
-You are an intelligent resume summarizer. A user has provided their CV, and your task is to create a concise summary of their professional background, highlighting their key skills, relevant experience, and notable achievements. Focus on the industries they have worked in, the roles they have held, and any certifications or education mentioned.
-
-**User CV:**
-{question}
-
-**Instructions:**
-1. **Key Skills:** Identify the main skills mentioned in the user's CV.
-2. **Experience Summary:** Summarize the user's work experience, including job titles, industries, and companies.
-3. **Notable Achievements:** Highlight any significant accomplishments or recognitions.
-4. **Education & Certifications:** Include any relevant educational background or certifications.
-5. **Overall Summary:** Provide an overall summary that captures the essence of the user's professional profile.
-
-**Output:**
-Return a concise summary of the user's CV, focusing on their key qualifications and professional highlights.
+Extract key details from a CV or resume, including name, contact information, work experience, education, skills, and certifications. Structure the output in a format optimized for a retriever system, ensuring each category is clearly labeled for easy indexing and retrieval.
+ **User CV:** 
+ {cv}
 
 """
-
-
 QA_PROMPT = """
-
-You are an AI job assistant. Based on the user's preferences, qualifications, and experience, evaluate the following job posting.
-
+You are an AI job recomender. Based on the user's preferences, qualifications, and experience, evaluate the following job posting.
 
 1. Mention what jobs on the current listing
 2. Compare the user's CV/resume to the job listing, highlighting the key areas of alignment and any gaps.
 3. Assess whether the job is a match for the user's skills and experience. If the job matches, explain why. If it does not match, clearly state: "Does not match."
 
-CV/Resume: {question}
-Job Listing: {context}
+CV/Resume: 
+{cv}
+
+Job Listing: 
+{job_listing}
+
 """
 
+QUESTION_PROMPT = """
+You are an AI job recommender, tasked with explaining job opportunities to a user. Your goal is to provide a clear, relevant, and factually accurate explanation of the retrieved jobs. Only use information from the retrieved jobs to respond, and do not introduce any information or assumptions that are not explicitly found in the retrieved documents.
 
+User's Question: {user_question}
+Retrieved Jobs: {retriever_docs}
+
+Please explain the job opportunities based on the information provided in the retrieved jobs, making sure to highlight the most relevant details to the user.
+"""
 
 
 contextualize_q_system_prompt = """Given a chat history and the latest user question \
