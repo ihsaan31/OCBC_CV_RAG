@@ -24,7 +24,7 @@ PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
-index_name = "ocbc-cv-gpt"  # change if desired
+index_name = "ocbc-cv-gpt-new"  # change if desired
 index = pc.Index(index_name)
 
 llm = AzureChatOpenAI(
@@ -44,7 +44,7 @@ embedding_llm = AzureOpenAIEmbeddings(
         )
 
 vector_store = PineconeVectorStore(index=index, embedding=embedding_llm)
-retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={'k': 6})
+retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={'k': 4})
 
 prompt = PromptTemplate.from_template(QA_PROMPT)
 
