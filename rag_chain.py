@@ -75,7 +75,7 @@ merged_rag_chain = (
 
 question_prompt = PromptTemplate.from_template(QUESTION_PROMPT)
 question_chain = (
-    {"cv": RunnablePassthrough(),
+    {"cv": itemgetter("cv"),
      "user_question": itemgetter("user_question"),
      "retriever_docs": itemgetter("user_question") | retriever} 
     | RunnablePassthrough()
@@ -86,11 +86,16 @@ question_chain = (
     | StrOutputParser()
 )
 
+cv = ""
+
 def caller_cv(message):
+    global cv
     response = merged_rag_chain.invoke({"cv": message})
+    cv = message
     return response
 
-def caller_question(cv, message):
+def caller_question(message):
+    global cv
     response = question_chain.invoke({"cv": cv, "user_question": message})
     return response
 
