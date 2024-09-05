@@ -1,9 +1,17 @@
+# CV_sumerrizer = """
+# Extract key details from a CV or resume, include only past experience position, education, skills, and certifications. 
+# Structure the output in a JSON format optimized for a retriever system, ensuring each category is clearly labeled for easy indexing and retrieval.
+#  **User CV:** 
+#  {cv}
+# """
+
 CV_sumerrizer = """
-Extract key details from a CV or resume, including name, contact information, work experience, education, skills, and certifications. Structure the output in a format optimized for a retriever system, ensuring each category is clearly labeled for easy indexing and retrieval.
+Extract relevant job position from a CV or resume, based on the past experience position, education, skills, and certifications. 
+Structure the output in a list of multiple job position that are related.
  **User CV:** 
  {cv}
-
 """
+
 QA_PROMPT = """
 You are an AI job recomender. Based on the user's preferences, qualifications, and experience, evaluate the following job posting.
 
