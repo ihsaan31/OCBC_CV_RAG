@@ -33,4 +33,4 @@ scikit-learn
 PyPDF2
 fitz
 opencv-python
-PaddleOCR
+paddleocr
