@@ -20,6 +20,7 @@ motor
 fastapi
 pymupdf
 python-docx
+opencv-python
 paddlepaddle
 paddleocr
 openpyxl
