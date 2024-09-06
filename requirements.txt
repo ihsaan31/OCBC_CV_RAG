@@ -20,8 +20,8 @@ motor
 fastapi
 pymupdf
 python-docx
-paddleocr
 paddlepaddle
+paddleocr
 openpyxl
 pytz
 xlrd
