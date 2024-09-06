@@ -32,3 +32,6 @@ langchain-cohere
 langchain-cli
 scikit-learn
 PyPDF2
+fitz
+paddlepaddle
+cv2 
