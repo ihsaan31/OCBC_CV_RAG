@@ -20,7 +20,6 @@ motor
 fastapi
 pymupdf
 python-docx
-cv2 
 paddlepaddle
 openpyxl
 pytz
@@ -35,3 +34,4 @@ PyPDF2
 fitz
 paddlepaddle
 opencv-python
+cv2 
