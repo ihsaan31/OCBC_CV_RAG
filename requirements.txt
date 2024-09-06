@@ -1,3 +1,4 @@
+python_version == "3.9.19"
 datasets
 streamlit
 langchain-core
@@ -34,3 +35,4 @@ scikit-learn
 PyPDF2
 fitz
 paddlepaddle
+opencv-python
