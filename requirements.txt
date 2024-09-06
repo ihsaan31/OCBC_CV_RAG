@@ -20,6 +20,7 @@ motor
 fastapi
 pymupdf
 python-docx
+paddleocr
 paddlepaddle
 openpyxl
 pytz
@@ -32,5 +33,4 @@ langchain-cli
 scikit-learn
 PyPDF2
 fitz
-opencv-python
-paddleocr
+paddlepaddle
