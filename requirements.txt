@@ -34,4 +34,3 @@ PyPDF2
 fitz
 paddlepaddle
 opencv-python
-cv2 
