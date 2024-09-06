@@ -18,7 +18,7 @@ langchain_postgres
 langchain_elasticsearch
 motor
 fastapi
-pymupdf
+PyMuPDF
 python-docx
 opencv-python-headless
 paddlepaddle
@@ -33,5 +33,3 @@ langchain-cohere
 langchain-cli
 scikit-learn
 PyPDF2
-fitz
-paddlepaddle
