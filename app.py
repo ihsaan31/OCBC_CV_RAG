@@ -39,8 +39,11 @@ if not st.session_state.file_uploaded:
     uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
     
     if uploaded_file is not None:
-        ocr_id = PaddleOCR(use_angle_cls=True, lang='en', show_log=False, use_gpu=True)
-        pdf_text += extract_text_from_pdf(uploaded_file, ocr_id, 0.8)
+    # Process the PDF file
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+        pdf_text = ""
+        for page in pdf_reader.pages:
+            pdf_text += page.extract_text()
         
         st.session_state.messages.append(
             {"role": "user", "content": pdf_text}
